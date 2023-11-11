@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -23,5 +25,4 @@ return [
     'logout' => 'Logout',
     'email' => 'Email',
     'remember_me' => 'Remember me',
-
 ];

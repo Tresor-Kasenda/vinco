@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\UserTypeEnum;
+use App\Http\Middleware\EnsureUserHasSpecificTypeMiddleware;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Livewire\Volt\Volt;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
@@ -13,14 +14,14 @@ test('login screen can be rendered', function (): void {
     $response = get('/login');
 
     $response
-        ->assertSeeVolt('pages.auth.login')
+        ->assertSeeLivewire('auth.login')
         ->assertOk();
 });
 
 test('users can authenticate using the login screen', function (): void {
     $user = User::factory()->create();
 
-    $component = Volt::test('pages.auth.login')
+    $component = Livewire::test('auth.login')
         ->set('form.email', $user->email)
         ->set('form.password', 'password');
 
@@ -36,7 +37,7 @@ test('users can authenticate using the login screen', function (): void {
 test('users can not authenticate with invalid password', function (): void {
     $user = User::factory()->create();
 
-    $component = Volt::test('pages.auth.login')
+    $component = Livewire::test('auth.login')
         ->set('form.email', $user->email)
         ->set('form.password', 'wrong-password');
 
@@ -57,7 +58,7 @@ test('navigation menu can be rendered', function (): void {
     $response = get('/dashboard');
 
     $response
-        ->assertSeeVolt('layout.navigation')
+        ->assertSeeLivewire('layout.navigation')
         ->assertOk();
 });
 
@@ -66,7 +67,7 @@ test('users can logout', function (): void {
 
     actingAs($user);
 
-    $component = Volt::test('layout.navigation');
+    $component = Livewire::test('layout.navigation');
 
     $component->call('logout');
 
@@ -77,28 +78,43 @@ test('users can logout', function (): void {
     $this->assertGuest();
 });
 
-
-it('allows student users to pass the middleware and get redirected', function () {
+it('allows student users to pass the middleware and get redirected', function (): void {
     $user = User::factory()->create(['user_type' => UserTypeEnum::USER_STUDENT]);
     actingAs($user);
 
-    $response = get('/dashboard');
+    $request = Request::create('/dashboard', 'GET');
+    $request->setUserResolver(fn () => $user);
 
-    $response->assertRedirect('home');
-    $response->assertSessionHas('danger', 'Welcome to lms learning.');
+    $middleware = new EnsureUserHasSpecificTypeMiddleware();
+
+    $response = $middleware->handle($request, function (): void {
+    });
+
+    $this->assertEquals(302, $response->getStatusCode());
+    $this->assertEquals(route('home'), $response->headers->get('Location'));
+    $this->assertEquals('Welcome to lms learning.', session('danger'));
 });
 
-it('allows non-student users to pass the middleware without redirection', function () {
+it('allows non-student users to pass the middleware without redirection', function (): void {
     $user = User::factory()->create(['user_type' => UserTypeEnum::USER_SCHOOL_MANAGEMENT]);
     actingAs($user);
 
-    $response = get('/test');
+    $request = Request::create('/test', 'GET');
+    $request->setUserResolver(fn () => $user);
 
-    $response->assertOk();
+    $middleware = new EnsureUserHasSpecificTypeMiddleware();
+
+    $response = $middleware->handle($request, fn () => new Response());
+
+    $this->assertEquals(200, $response->getStatusCode());
 });
 
-it('allows guests to pass the middleware without redirection', function () {
-    $response = get('/test');
+it('allows guests to pass the middleware without redirection', function (): void {
+    $request = Request::create('/test', 'GET');
 
-    $response->assertOk();
+    $middleware = new EnsureUserHasSpecificTypeMiddleware();
+
+    $response = $middleware->handle($request, fn () => new Response());
+
+    $this->assertEquals(200, $response->getStatusCode());
 });

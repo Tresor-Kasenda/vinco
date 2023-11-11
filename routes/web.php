@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (): void {
     $yourApiKey = "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";
     $client = OpenAI::client($yourApiKey);
 
@@ -33,4 +33,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

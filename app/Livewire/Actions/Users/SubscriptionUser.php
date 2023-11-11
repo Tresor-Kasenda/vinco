@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Actions\Users;
 
 use App\Enums\UserTypeEnum;
@@ -25,7 +27,7 @@ class SubscriptionUser
     {
         $user->update([
             'university_id' => University::query()
-                ->firstOrCreate(['name' => $user->user_type === UserTypeEnum::USER_STUDENT ? 'Vinco' : $user->user_type])
+                ->firstOrCreate(['name' => UserTypeEnum::USER_STUDENT === $user->user_type ? 'Vinco' : $user->user_type])
                 ->id
         ]);
 

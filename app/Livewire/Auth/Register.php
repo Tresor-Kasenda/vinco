@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Auth;
 
 use App\Enums\UserTypeEnum;
@@ -41,7 +43,7 @@ class Register extends Component
         'lowercase',
         'email',
         'max:255',
-        'unique:' . User::class
+        'unique:'.User::class
     ])]
     public string $email = '';
     #[Rule([
@@ -50,7 +52,7 @@ class Register extends Component
         'confirmed'
     ])]
     public string $password = '';
-    
+
     #[Rule([
         'required',
         'string'

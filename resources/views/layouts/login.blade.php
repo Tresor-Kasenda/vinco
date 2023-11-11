@@ -24,11 +24,15 @@
             <div class="nk-content ">
                 <div class="nk-split nk-split-page nk-split-md">
                     {{ $slot }}
-                    <div class="nk-split-content nk-split-stretch bg-abstract"></div>
+                    <div
+                        class="nk-split-content nk-split-stretch bg-abstract"
+                        style="background-image: url('{{ asset('images/background.webp') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;"
+                    ></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="{{ asset('js/bundle.js') }}"></script>
 <script src="{{ asset("js/scripts.js") }}"></script>

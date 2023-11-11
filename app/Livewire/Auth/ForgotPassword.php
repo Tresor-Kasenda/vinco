@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Auth;
 
 use Illuminate\Contracts\Foundation\Application;
@@ -36,7 +38,7 @@ class ForgotPassword extends Component
             $this->only('email')
         );
 
-        if ($status != Password::RESET_LINK_SENT) {
+        if (Password::RESET_LINK_SENT !== $status) {
             $this->addError('email', __($status));
             return;
         }
