@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatusEnum;
+use App\Enums\UserTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -34,8 +37,7 @@ class User extends Authenticatable // implements MustVerifyEmail
         'user_type',
         'university_id',
         'feature_image_id',
-        'status',
-        'university_id'
+        'status'
     ];
 
     /**
@@ -56,7 +58,8 @@ class User extends Authenticatable // implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'status' => 'boolean'
+        'status' => UserStatusEnum::class,
+        'user_type' => UserTypeEnum::class,
     ];
 
     /**
@@ -67,5 +70,35 @@ class User extends Authenticatable // implements MustVerifyEmail
     public function university(): BelongsTo
     {
         return $this->belongsTo(University::class);
+    }
+
+    /**
+     * Get the feature image associated with the user.
+     *
+     * @return BelongsTo<Media, User>
+     */
+    public function featureImage(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'feature_image_id');
+    }
+
+    /**
+     * Get the feature image associated with the user.
+     *
+     * @return BelongsTo<Media, User>
+     */
+    public function profileImage(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'profile_image_id');
+    }
+
+    /**
+     * Get the images associated with the user.
+     *
+     * @return MorphMany<Media>
+     */
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'resource');
     }
 }
