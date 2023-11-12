@@ -30,6 +30,7 @@ class ResetPassword extends Component
     #[Rule([
         'required',
         'email',
+        'string',
         new Exists('users', 'email')
     ])]
     public string $email = '';
@@ -55,7 +56,7 @@ class ResetPassword extends Component
     {
         $this->token = $token;
 
-        $this->email = request()->string('email');
+        $this->email = request()->input('email');
     }
 
 

@@ -6,6 +6,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Livewire;
 use Livewire\Volt\Volt;
 
 test('password can be updated', function (): void {
@@ -13,7 +14,7 @@ test('password can be updated', function (): void {
 
     $this->actingAs($user);
 
-    $component = Volt::test('profile.update-password-form')
+    $component = Livewire::test('profile.update-password-form')
         ->set('current_password', 'password')
         ->set('password', 'new-password')
         ->set('password_confirmation', 'new-password')

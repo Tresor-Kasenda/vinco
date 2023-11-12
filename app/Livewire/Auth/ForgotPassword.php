@@ -19,7 +19,6 @@ class ForgotPassword extends Component
 {
     #[Rule([
         'required',
-        'string',
         'email'
     ])]
     public string $email = '';

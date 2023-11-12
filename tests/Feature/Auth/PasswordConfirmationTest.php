@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Livewire\Volt\Volt;
+use Livewire;
 
 test('confirm password screen can be rendered', function (): void {
     $user = User::factory()->create();
@@ -13,7 +13,7 @@ test('confirm password screen can be rendered', function (): void {
     $response = $this->actingAs($user)->get('/confirm-password');
 
     $response
-        ->assertSeeVolt('pages.auth.confirm-password')
+        ->assertSeeLivewire('auth.confirm-password')
         ->assertStatus(200);
 });
 
@@ -22,7 +22,7 @@ test('password can be confirmed', function (): void {
 
     $this->actingAs($user);
 
-    $component = Volt::test('pages.auth.confirm-password')
+    $component = Livewire::test('auth.confirm-password')
         ->set('password', 'password');
 
     $component->call('confirmPassword');
@@ -37,7 +37,7 @@ test('password is not confirmed with invalid password', function (): void {
 
     $this->actingAs($user);
 
-    $component = Volt::test('pages.auth.confirm-password')
+    $component = Livewire::test('auth.confirm-password')
         ->set('password', 'wrong-password');
 
     $component->call('confirmPassword');

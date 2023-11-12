@@ -15,18 +15,16 @@
             <div class="form-group">
                 <x-auths.forms.label for="user_type" :value="__('Type user')"/>
                 <div class="form-control-wrap">
-                    <x-form-select
-                        wire:model="form.user_type"
-                        name="user_type"
-                        :options="UserTypeEnum::cases()"
-                        :selected="old('user_type')"
-                        placeholder="Select your type user"
-                        :value="old('user_type')"
-                        class="form-control form-control-lg"
-                        required
-                        autofocus
-                        autocomplete="user_type"
-                    />
+                    <select wire:model="user_type"
+                            class="form-select form-control-lg js-select2 @error('user_type') error @enderror"
+                            name="user_type"
+                            id="user_type">
+                        @foreach(UserTypeEnum::cases() as $option)
+                            <option value="{{ $option->value }}">
+                                {{ $option->value }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -41,6 +39,7 @@
                         placeholder="Enter your name"
                         :value="old('name')"
                         autofocus
+                        class="@error('name') error @enderror"
                         autocomplete="name"
                     />
                 </div>
@@ -57,6 +56,7 @@
                         :value="old('email')"
                         placeholder="Enter your email address"
                         autofocus
+                        class="@error('email') error @enderror"
                         autocomplete="email"
                     />
                 </div>
@@ -75,6 +75,7 @@
                         type="password"
                         placeholder="Enter your password"
                         name="password"
+                        class="@error('password') error @enderror"
                         required
                         autocomplete="current-password"/>
                 </div>
@@ -91,6 +92,7 @@
                         wire:model="password_confirmation"
                         id="password_confirmation"
                         type="password"
+                        class="@error('password_confirmation') error @enderror"
                         placeholder="Enter your password confirmation"
                         name="password_confirmation"
                         required
@@ -113,8 +115,8 @@
             <h6 class="overline-title overline-title-sap"><span>OR</span></h6>
         </div>
         <ul class="nav justify-center gx-8">
-            <li class="nav-item"><a wire:navigate class="nav-link" href="#">Facebook</a></li>
-            <li class="nav-item"><a wire:navigate class="nav-link" href="#">Google</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('auth.facebook') }}">Facebook</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('auth.google') }}">Google</a></li>
         </ul>
     </div>
     <x-auth-footer/>

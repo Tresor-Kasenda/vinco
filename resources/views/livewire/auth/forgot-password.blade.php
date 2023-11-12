@@ -21,6 +21,7 @@
                         id="email"
                         type="text"
                         name="email"
+                        class="@error('email') error @enderror"
                         required
                         :value="old('email')"
                         placeholder="Enter your email address"

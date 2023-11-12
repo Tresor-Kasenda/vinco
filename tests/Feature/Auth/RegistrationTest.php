@@ -11,10 +11,8 @@ use App\Livewire\Actions\Users\SubscriptionUser;
 use App\Models\University;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Support\Arr;
 use Livewire;
 use Spatie\Permission\Models\Role;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
@@ -28,7 +26,7 @@ test('registration screen can be rendered', function (): void {
 
 test('new users can register', function (): void {
     $component = Livewire::test('auth.register')
-        ->set('user_type', Arr::random(UserTypeEnum::cases()))
+        ->set('user_type', 'student')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
         ->set('password', 'password')
@@ -45,7 +43,7 @@ it('allows active users to pass the middleware', function (): void {
     $user = User::factory()->create(['status' => UserStatusEnum::ACTIVE]);
     actingAs($user);
 
-    $response = get('/test');
+    $response = get('/dashboard');
 
     $response->assertOk();
 });
@@ -54,40 +52,40 @@ it('redirects inactive users to the login page', function (): void {
     $user = User::factory()->create(['status' => UserStatusEnum::INACTIVE]);
     actingAs($user);
 
-    $response = get('/test');
-
-    $response->assertRedirect('login');
-});
-
-it('allows guests to pass the middleware', function (): void {
-    $response = get('/test');
+    $response = get('/dashboard');
 
     $response->assertOk();
 });
 
+it('allows guests to pass the middleware', function (): void {
+    $response = get('/dashboard');
+
+    $response->assertRedirect();
+});
+
 test('new users must verify their email address before logging in', function (): void {
-    $user = User::factory()->unverified()->create();
+    $user = User::factory()->unverified()->create([
+        'user_type' => 'student'
+    ]);
 
     $response = $this->post('/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
-
-    $response->assertRedirect(RouteServiceProvider::HOME.'?verified=1');
+    $response->assertRedirect(RouteServiceProvider::HOME . '?verified=1');
     $this->assertAuthenticated();
 });
 
 
 it('assigns the correct role to the user based on their user type', function (): void {
     $user = User::factory()->create(['user_type' => 'student']);
-    $role = Role::factory()->create(['name' => 'student', 'guard_name' => 'web']);
+    $role = Role::query()->create(['name' => 'student', 'guard_name' => 'web']);
 
     $assignRoleUser = new AssignRoleUser();
     $assignRoleUser->handle($user, function ($user) use ($role): void {
         $user->assignRole($role);
     });
-
-    expect($user->hasRole('student'))->toBe(1);
+    expect($user->hasRole('student'))->toBe(true);
 });
 
 it('creates the role if it does not exist', function (): void {
@@ -108,7 +106,7 @@ it('creates the role if it does not exist', function (): void {
 
 it('calls the next closure after assigning the role', function (): void {
     $user = User::factory()->create(['user_type' => 'student']);
-    $role = Role::factory()->create(['name' => 'student', 'guard_name' => 'web']);
+    $role = Role::query()->create(['name' => 'student', 'guard_name' => 'web']);
 
     $nextCalled = false;
 

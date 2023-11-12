@@ -19,6 +19,7 @@
                         type="text"
                         name="email"
                         required
+                        class="@error('email') error @enderror"
                         :value="old('email')"
                         placeholder="Enter your email address"
                         autofocus
@@ -38,6 +39,7 @@
                         wire:model="password"
                         id="password"
                         type="password"
+                        class="@error('password') error @enderror"
                         placeholder="Enter your password"
                         name="password"
                         required
@@ -56,6 +58,7 @@
                         wire:model="password_confirmation"
                         id="password_confirmation"
                         type="password"
+                        class="@error('password_confirmation') error @enderror"
                         placeholder="Enter your password confirmation"
                         name="password_confirmation"
                         required

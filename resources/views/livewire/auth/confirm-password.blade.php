@@ -24,6 +24,7 @@
                         type="password"
                         placeholder="Enter your password"
                         name="password"
+                        class="@error('password') error @enderror"
                         required
                         autocomplete="current-password"/>
                 </div>

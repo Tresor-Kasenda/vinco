@@ -26,11 +26,10 @@ class Register extends Component
 {
     #[Rule([
         'required',
-        'string',
         'max:255',
         new Enum(UserTypeEnum::class)
     ])]
-    public string $user_type = '';
+    public string $user_type;
     #[Rule([
         'required',
         'string',
@@ -43,7 +42,7 @@ class Register extends Component
         'lowercase',
         'email',
         'max:255',
-        'unique:'.User::class
+        'unique:' . User::class
     ])]
     public string $email = '';
     #[Rule([

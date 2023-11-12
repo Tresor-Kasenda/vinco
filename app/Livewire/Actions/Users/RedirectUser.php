@@ -7,8 +7,8 @@ namespace App\Livewire\Actions\Users;
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Features\SupportRedirects\Redirector;
 
 class RedirectUser
 {
@@ -20,9 +20,9 @@ class RedirectUser
      *
      * @param mixed $user The user to log in and redirect.
      * @param Closure $next The next closure in the pipeline.
-     * @return RedirectResponse The response that should be returned by the middleware.
+     * @return Redirector The response that should be returned by the middleware.
      */
-    public function handle(mixed $user, Closure $next): RedirectResponse
+    public function handle(mixed $user, Closure $next): Redirector
     {
         // Fire a Registered event for the user
         event(new Registered($user));

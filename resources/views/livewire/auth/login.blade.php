@@ -23,6 +23,7 @@
                         name="email"
                         required
                         autofocus
+                        class="@error('email') error @enderror"
                         :value="old('form.email')"
                         autocomplete="username"
                     />
@@ -45,6 +46,7 @@
                         id="password"
                         type="password"
                         name="password"
+                        class="@error('password') error @enderror"
                         required
                         autocomplete="current-password"/>
                 </div>
@@ -62,8 +64,8 @@
             <h6 class="overline-title overline-title-sap"><span>OR</span></h6>
         </div>
         <ul class="nav justify-center gx-4">
-            <li class="nav-item"><a wire:navigate class="nav-link" href="#">Facebook</a></li>
-            <li class="nav-item"><a wire:navigate class="nav-link" href="#">Google</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('auth.facebook') }}">Facebook</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('auth.google') }}">Google</a></li>
         </ul>
     </div>
     <x-auth-footer/>

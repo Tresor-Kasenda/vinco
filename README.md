@@ -20,9 +20,9 @@ Vinco est une solution adapter aux ecoles et aux universites parce qu'elle perme
 
 * [ ] Modelisation and definitions des etapes du logiciels
 * [x] Inscription de l'utilisaeur
-* [ ] Procedure de selection entre etudiant et chef d'institution
-* [ ] creation de l'institution si c'est une institution
-* [ ] Authentication par google et facebook
+* [x] Procedure de selection entre etudiant et chef d'institution
+* [x] creation de l'institution si c'est une institution
+* [x] Authentication par google et facebook
 * [ ] Multi-tenancy (gestion des clients)
 * [ ] Definir l'annee academique (scolaire)
 * [ ] Acceder au dashboard
